@@ -6,15 +6,15 @@
     android:background="@color/mint_cream"
     >
 
-    <!--<android.support.v7.widget.RecyclerView-->
-        <!--android:id="@+id/list"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"/>-->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
-    <jack.hive.HiveImageView
-        android:id="@+id/img_hive"
-        android:layout_width="100dp"
-        android:layout_height="100dp" />
+    <!--<jack.hive.HiveImageView-->
+        <!--android:id="@+id/img_hive"-->
+        <!--android:layout_width="100dp"-->
+        <!--android:layout_height="100dp" />-->
 
 
 </RelativeLayout>
