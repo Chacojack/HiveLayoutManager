@@ -1,5 +1,6 @@
 package jack.hive;
 
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -11,6 +12,8 @@ import android.widget.ImageView;
 public class ImageViewHolder extends RecyclerView.ViewHolder {
 
     ImageView imageView ;
+    int id ;
+    Bitmap bitmap ;
 
     public ImageViewHolder(View itemView) {
         super(itemView);
@@ -18,6 +21,10 @@ public class ImageViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(Integer resId) {
-        imageView.setImageDrawable(new HiveDrawable(BitmapFactory.decodeResource(imageView.getResources(),resId)));
+        if (id != resId) {
+            id = resId ;
+            bitmap = BitmapFactory.decodeResource(imageView.getResources(),resId) ;
+        }
+        imageView.setImageDrawable(new HiveDrawable(bitmap));
     }
 }

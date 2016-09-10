@@ -16,7 +16,15 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    int[] resIds = new int[]{R.drawable.img_1,R.drawable.img_1,R.drawable.img_1,R.drawable.img_1,R.drawable.img_1,R.drawable.img_1,R.drawable.img_1,R.drawable.img_1} ;
+    int[] resIds = new int[]{
+            R.drawable.img_1
+            ,R.drawable.img_1
+            ,R.drawable.img_1
+            ,R.drawable.img_1
+            ,R.drawable.img_1
+            ,R.drawable.img_1
+            ,R.drawable.img_1
+            ,R.drawable.img_1} ;
 
     RecyclerView recyclerView ;
     HiveAdapter adapter ;
