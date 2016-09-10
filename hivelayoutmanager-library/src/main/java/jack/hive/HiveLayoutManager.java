@@ -13,6 +13,16 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager{
 
     private static final String TAG = HiveLayoutManager.class.getSimpleName();
 
+    HiveLayoutHelper helper ;
+
+    public HiveLayoutManager() {
+        init() ; 
+    }
+
+    private void init() {
+        helper = HiveLayoutHelper.getInstance() ;
+    }
+
     @Override
     public RecyclerView.LayoutParams generateDefaultLayoutParams() {
         return new RecyclerView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -75,4 +85,14 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager{
     public boolean canScrollVertically() {
         return true;
     }
+
+
+
+    class AnchorInfo {
+
+        int position ;
+
+    }
+
+
 }

@@ -9,41 +9,49 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
+
+import java.util.IllegalFormatException;
 
 /**
  * Created by zjchai on 16/9/9.
  */
 public class HiveDrawable extends Drawable {
 
-    Rect mRect = new Rect();
-    Paint mPaint;
-    Path mPath ;
-    BitmapShader mShader;
-    Bitmap mBitmap ;
+    private static final String TAG = HiveDrawable.class.getSimpleName();
+    private Rect mRect = new Rect();
+    private Paint mPaint;
+    private Path mPath;
+    private BitmapShader mShader;
+    private Bitmap mBitmap;
 
-    public HiveDrawable() {
-        this(null) ;
+    @HiveLayoutHelper.Orientation
+    private int mOrientation;
+
+    public HiveDrawable(@HiveLayoutHelper.Orientation int orientation) {
+        this(orientation, null);
     }
 
-    public HiveDrawable(Bitmap bitmap) {
+    public HiveDrawable(int orientation, Bitmap bitmap) {
+        this.mOrientation = orientation;
         init();
         setBitmap(bitmap);
     }
 
     private void init() {
-        initPaint() ;
-        initPath() ;
+        initPaint();
+        initPath();
     }
 
-    private void ensurePaint(){
+    private void ensurePaint() {
         if (mPaint == null) {
-            mPaint = new Paint() ;
+            mPaint = new Paint();
         }
     }
 
-    private void ensurePath(){
+    private void ensurePath() {
         if (mPath == null) {
-            mPath = new Path() ;
+            mPath = new Path();
         }
     }
 
@@ -61,32 +69,49 @@ public class HiveDrawable extends Drawable {
     public void setBitmap(Bitmap bitmap) {
         this.mBitmap = bitmap;
         if (bitmap == null) {
-            mShader =null ;
+            mShader = null;
         } else {
-            mShader = new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP) ;
-            mPaint.setShader(mShader) ;
+            mShader = new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
+            mPaint.setShader(mShader);
         }
     }
 
     private void initPath() {
         ensurePath();
-        float l = (float) (mRect.width() / 2);
-        float h = (float) (Math.sqrt(3)*l);
-        float top = (mRect.height() - h) / 2  ;
-        mPath.reset();
-        mPath.moveTo(l/2,top);
-        mPath.lineTo(0,h/2+top);
-        mPath.lineTo(l/2,h+top);
-        mPath.lineTo((float) (l*1.5),h+top);
-        mPath.lineTo(2*l,h/2+top);
-        mPath.lineTo((float) (l*1.5),top);
-        mPath.lineTo(l/2,top);
-        mPath.close();
+        if (mOrientation == HiveLayoutHelper.HORIZONTAL) {
+            float l = (float) (mRect.width() / 2);
+            float h = (float) (Math.sqrt(3) * l);
+            float top = (mRect.height() - h) / 2;
+            mPath.reset();
+            mPath.moveTo(l / 2, top);
+            mPath.lineTo(0, h / 2 + top);
+            mPath.lineTo(l / 2, h + top);
+            mPath.lineTo((float) (l * 1.5), h + top);
+            mPath.lineTo(2 * l, h / 2 + top);
+            mPath.lineTo((float) (l * 1.5), top);
+            mPath.lineTo(l / 2, top);
+            mPath.close();
+        } else if (mOrientation == HiveLayoutHelper.VERTICAL) {
+            float l = (float) (mRect.height() / 2);
+            float w = (float) (Math.sqrt(3) * l);
+            float left = (mRect.width() - w) / 2;
+            mPath.reset();
+            mPath.moveTo(left, l / 2);
+            mPath.lineTo(w / 2 + left, 0);
+            mPath.lineTo(w + left, l / 2);
+            mPath.lineTo(w + left, (float) (l * 1.5));
+            mPath.lineTo(w / 2 + left, 2 * l);
+            mPath.lineTo(left, (float) (l * 1.5));
+            mPath.lineTo(left, l / 2);
+            mPath.close();
+        } else {
+            Log.e(TAG, String.format("hive drawable orientation mast be horizontal : %d or verticall : %d", HiveLayoutHelper.HORIZONTAL, HiveLayoutHelper.VERTICAL));
+        }
     }
 
     @Override
     public void draw(Canvas canvas) {
-        canvas.drawPath(mPath,mPaint);
+        canvas.drawPath(mPath, mPaint);
     }
 
     @Override
@@ -99,13 +124,13 @@ public class HiveDrawable extends Drawable {
     @Override
     public void setColorFilter(ColorFilter colorFilter) {
         if (mPaint != null) {
-            mPaint.setColorFilter(colorFilter) ;
+            mPaint.setColorFilter(colorFilter);
         }
     }
 
     @Override
     public int getOpacity() {
-        return 0 ;
+        return 0;
     }
 
     @Override
@@ -120,15 +145,20 @@ public class HiveDrawable extends Drawable {
         if (mBitmap != null) {
             return mBitmap.getWidth();
         } else {
-            return super.getIntrinsicWidth() ;
+            return super.getIntrinsicWidth();
         }
     }
 
     @Override
     public int getIntrinsicHeight() {
         if (mBitmap != null) {
-            return mBitmap.getHeight() ;
+            return mBitmap.getHeight();
         }
         return super.getIntrinsicHeight();
+    }
+
+    @HiveLayoutHelper.Orientation
+    public int getOrientation() {
+        return mOrientation;
     }
 }
