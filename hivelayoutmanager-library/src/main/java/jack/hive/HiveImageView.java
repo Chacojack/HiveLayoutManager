@@ -23,10 +23,6 @@ public class HiveImageView extends ImageView {
         super(context, attrs, defStyleAttr);
     }
 
-    @Override
-    public void setImageResource(int resId) {
-        super.setImageResource(resId);
-    }
 
     @Override
     protected void onDraw(Canvas canvas) {

@@ -3,7 +3,6 @@ package jack.hive;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.Path;
@@ -19,7 +18,7 @@ public class HiveDrawable extends Drawable {
     Rect mRect = new Rect();
     Paint mPaint;
     Path mPath ;
-    BitmapShader shader ;
+    BitmapShader mShader;
     Bitmap mBitmap ;
 
     public HiveDrawable() {
@@ -62,26 +61,26 @@ public class HiveDrawable extends Drawable {
     public void setBitmap(Bitmap bitmap) {
         this.mBitmap = bitmap;
         if (bitmap == null) {
-            shader =null ;
+            mShader =null ;
         } else {
-            shader = new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP) ;
-            mPaint.setShader(shader) ;
+            mShader = new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP) ;
+            mPaint.setShader(mShader) ;
         }
     }
 
     private void initPath() {
         ensurePath();
-        float mLength = (float) (mRect.width() / 2);
-        float height = (float) (Math.sqrt(3)*mLength);
-        float top = mLength - height / 2  ;
+        float l = (float) (mRect.width() / 2);
+        float h = (float) (Math.sqrt(3)*l);
+        float top = (mRect.height() - h) / 2  ;
         mPath.reset();
-        mPath.moveTo(mLength/2,top);
-        mPath.lineTo(0,height/2+top);
-        mPath.lineTo(mLength/2,height+top);
-        mPath.lineTo((float) (mLength*1.5),height+top);
-        mPath.lineTo(2*mLength,height/2+top);
-        mPath.lineTo((float) (mLength*1.5),top);
-        mPath.lineTo(mLength/2,top);
+        mPath.moveTo(l/2,top);
+        mPath.lineTo(0,h/2+top);
+        mPath.lineTo(l/2,h+top);
+        mPath.lineTo((float) (l*1.5),h+top);
+        mPath.lineTo(2*l,h/2+top);
+        mPath.lineTo((float) (l*1.5),top);
+        mPath.lineTo(l/2,top);
         mPath.close();
     }
 

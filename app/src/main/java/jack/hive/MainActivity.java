@@ -2,6 +2,10 @@ package jack.hive;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.PixelFormat;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -28,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private void afterViews() {
 //        recyclerView.setLayoutManager(new HiveLayoutManager()) ;
         hiveImageView.setImageDrawable(new HiveDrawable(BitmapFactory.decodeResource(getResources(),R.drawable.img_1)));
+
     }
 
 
