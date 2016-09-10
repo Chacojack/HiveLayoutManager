@@ -1,6 +1,7 @@
 package jack.hive;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 public class HiveLayoutManager extends RecyclerView.LayoutManager{
 
 
+    private static final String TAG = HiveLayoutManager.class.getSimpleName();
 
     @Override
     public RecyclerView.LayoutParams generateDefaultLayoutParams() {
@@ -42,5 +44,35 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager{
 
         }
 
+    }
+
+
+    @Override
+    public int scrollHorizontallyBy(int dx, RecyclerView.Recycler recycler, RecyclerView.State state) {
+        Log.d(TAG, String.format("scrollHorizontallyBy: dx : %d",dx));
+
+        offsetChildrenHorizontal(-dx);
+
+        return dx;
+    }
+
+    @Override
+    public int scrollVerticallyBy(int dy, RecyclerView.Recycler recycler, RecyclerView.State state) {
+        Log.d(TAG, String.format("scrollHorizontallyBy: dy : %d",dy));
+
+        offsetChildrenVertical(-dy);
+
+        return dy;
+    }
+
+    @Override
+    public boolean canScrollHorizontally() {
+        return true;
+    }
+
+
+    @Override
+    public boolean canScrollVertically() {
+        return true;
     }
 }

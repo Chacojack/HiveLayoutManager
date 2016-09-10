@@ -16,12 +16,10 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    int[] resIds = new int[]{R.drawable.img_1,R.drawable.img_1,R.drawable.img_1,R.drawable.img_1,R.drawable.img_1} ;
+    int[] resIds = new int[]{R.drawable.img_1,R.drawable.img_1,R.drawable.img_1,R.drawable.img_1,R.drawable.img_1,R.drawable.img_1,R.drawable.img_1,R.drawable.img_1} ;
 
     RecyclerView recyclerView ;
     HiveAdapter adapter ;
-
-//    HiveImageView hiveImageView ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-//        hiveImageView = (HiveImageView) findViewById(R.id.img_hive) ;
         recyclerView = (RecyclerView) findViewById(R.id.list) ;
     }
 
@@ -50,11 +47,9 @@ public class MainActivity extends AppCompatActivity {
             adapter.addData(resIds[i]);
         }
 
-
-
-//        hiveImageView.setImageDrawable(new HiveDrawable(BitmapFactory.decodeResource(getResources(),R.drawable.img_1)));
-
     }
+
+
 
 
 }
