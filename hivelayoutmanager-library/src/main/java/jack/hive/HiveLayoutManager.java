@@ -1,9 +1,15 @@
 package jack.hive;
 
+import android.graphics.PointF;
+import android.graphics.RectF;
+import android.support.annotation.IntDef;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by zjchai on 16/9/9.
@@ -17,10 +23,14 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager {
 
     public static final int VERTICAL = HiveLayoutHelper.VERTICAL;
 
+    @IntDef({HORIZONTAL, VERTICAL})
+    public @interface Orientation {
+    }
 
-
+    IHiveMathUtils hiveMathUtils;
     HiveLayoutHelper helper;
-    AnchorInfo anchorInfo ;
+    AnchorInfo anchorInfo;
+    final List<List<RectF>> floors = new ArrayList<>();
 
     int mOrientation;
 
@@ -32,6 +42,7 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager {
 
     private void init() {
         helper = HiveLayoutHelper.getInstance(this);
+        hiveMathUtils = HiveMathUtils.getInstance();
     }
 
     @Override
@@ -42,36 +53,99 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager {
 
     @Override
     public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
-        initAnchorInfo() ;
+
         detachAndScrapAttachedViews(recycler);
 
         int itemCount = state.getItemCount();
 
-        int left, top;
-        left = top = 0;
+        if (itemCount <= 0) {
+            return;
+        }
+
+        initAnchorInfo(recycler);
+        initFloors();
 
         for (int i = 0; i < itemCount; i++) {
             View view = recycler.getViewForPosition(i);
             addView(view);
             measureChildWithMargins(view, 0, 0);
 
-            int width = getDecoratedMeasuredWidth(view);
-            int height = getDecoratedMeasuredHeight(view);
+            HivePositionInfo positionInfo = hiveMathUtils.getFloorOfPosition(i);
 
-            helper.getChildBounds(i) ;
+            checkFloor(positionInfo.floor);
 
-            left += width;
-            top += height;
+            List<RectF> floor = floors.get(positionInfo.floor);
+            RectF bounds = floor.get(positionInfo.getPosition());
+
+            layoutDecoratedWithMargins(view, (int) bounds.left, (int) bounds.top, (int) bounds.right, (int) bounds.bottom);
+
 
         }
 
+//        int left, top;
+//        left = top = 0;
+//
+//        for (int i = 0; i < itemCount; i++) {
+//            View view = recycler.getViewForPosition(i);
+//            addView(view);
+//            measureChildWithMargins(view, 0, 0);
+//
+//            int width = getDecoratedMeasuredWidth(view);
+//            int height = getDecoratedMeasuredHeight(view);
+//
+//
+//
+//            left += width;
+//            top += height;
+//
+//        }
+
     }
 
-    private void initAnchorInfo() {
+    private void initFloors() {
+        if (floors.size()==0) {
+            List<RectF> list = new ArrayList<>();
+            list.add(anchorInfo.anchorRect);
+            floors.add(list);
+        }
+    }
+
+    private void checkFloor(int floor) {
+        if (floor < 0) {
+            return;
+        }
+        if (floors.size() > floor) {
+            // this floor has init.
+            return;
+        } else {
+            for (int i = floors.size(); i <= floor; i++) {
+                int i1 = i - 1 ;
+                Log.d(TAG, "checkFloor: i1 : " + i1+" , i : "+i);
+                List<RectF> temp = hiveMathUtils.getRectListOfFloor(floors.get(i1), anchorInfo.length, floor);
+                floors.add(temp);
+            }
+        }
+    }
+
+    private void initAnchorInfo(RecyclerView.Recycler recycler) {
         if (anchorInfo == null) {
-            anchorInfo = new AnchorInfo() ;
-            anchorInfo.anchorX = getWidth() / 2;
-            anchorInfo.anchorY = getHeight() / 2 ;
+            anchorInfo = new AnchorInfo();
+            anchorInfo.anchorPoint.set(getWidth() / 2, getHeight() / 2);
+
+            View view = recycler.getViewForPosition(0);
+            addView(view);
+            measureChildWithMargins(view, 0, 0);
+
+            int height = view.getMeasuredHeight();
+            int width = view.getMeasuredWidth();
+
+            float left = anchorInfo.anchorPoint.x - width / 2f;
+            float right = anchorInfo.anchorPoint.x + width / 2f;
+            float top = anchorInfo.anchorPoint.y - height / 2f;
+            float bottom = anchorInfo.anchorPoint.y + height / 2f;
+
+            anchorInfo.anchorRect.set(left, top, right, bottom);
+            anchorInfo.length = hiveMathUtils.calculateLength(anchorInfo.anchorRect, mOrientation);
         }
     }
 
@@ -112,7 +186,9 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager {
 
     class AnchorInfo {
 
-        int anchorX , anchorY;
+        final PointF anchorPoint = new PointF();
+        final RectF anchorRect = new RectF();
+        float length;
 
     }
 

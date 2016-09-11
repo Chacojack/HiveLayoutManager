@@ -25,6 +25,6 @@ public class ImageViewHolder extends RecyclerView.ViewHolder {
             id = resId ;
             bitmap = BitmapFactory.decodeResource(imageView.getResources(),resId) ;
         }
-        imageView.setImageDrawable(new HiveDrawable(HiveLayoutHelper.VERTICAL,bitmap));
+        imageView.setImageDrawable(new HiveDrawable(HiveLayoutManager.VERTICAL,bitmap));
     }
 }

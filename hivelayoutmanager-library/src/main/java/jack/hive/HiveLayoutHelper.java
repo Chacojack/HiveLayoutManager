@@ -9,12 +9,9 @@ import android.view.View;
  */
 public abstract class HiveLayoutHelper {
 
-    public static final int HORIZONTAL = 0 ;
+    static final int HORIZONTAL = 0 ;
 
-    public static final int VERTICAL = 1;
-
-    @IntDef({HORIZONTAL,VERTICAL})
-    public @interface Orientation{}
+    static final int VERTICAL = 1;
 
     RecyclerView.LayoutManager mLayoutManager ;
 
@@ -23,7 +20,7 @@ public abstract class HiveLayoutHelper {
     }
 
 
-    public static HiveLayoutHelper getInstance(RecyclerView.LayoutManager layoutManager){
+    public static HiveLayoutHelper getInstance(final RecyclerView.LayoutManager layoutManager){
         return new HiveLayoutHelper(layoutManager){
 
             @Override

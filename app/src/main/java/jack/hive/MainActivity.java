@@ -24,7 +24,44 @@ public class MainActivity extends AppCompatActivity {
             ,R.drawable.img_1
             ,R.drawable.img_1
             ,R.drawable.img_1
-            ,R.drawable.img_1} ;
+            ,R.drawable.img_1
+            ,R.drawable.img_1
+            ,R.drawable.img_1
+            ,R.drawable.img_1
+            ,R.drawable.img_1
+            ,R.drawable.img_1
+            ,R.drawable.img_1
+            ,R.drawable.img_1
+            ,R.drawable.img_1
+            ,R.drawable.img_1
+            ,R.drawable.img_1
+            ,R.drawable.img_1
+            ,R.drawable.img_1
+            ,R.drawable.img_1
+            ,R.drawable.img_1
+            ,R.drawable.img_1
+            ,R.drawable.img_1
+            ,R.drawable.img_1
+            ,R.drawable.img_1
+            ,R.drawable.img_1
+            ,R.drawable.img_1
+            ,R.drawable.img_1
+            ,R.drawable.img_1
+            ,R.drawable.img_1
+            ,R.drawable.img_1
+            ,R.drawable.img_1
+            ,R.drawable.img_1
+            ,R.drawable.img_1
+            ,R.drawable.img_1
+            ,R.drawable.img_1
+            ,R.drawable.img_1
+            ,R.drawable.img_1
+            ,R.drawable.img_1
+            ,R.drawable.img_1
+            ,R.drawable.img_1
+            ,R.drawable.img_1
+            ,R.drawable.img_1
+    } ;
 
     RecyclerView recyclerView ;
     HiveAdapter adapter ;

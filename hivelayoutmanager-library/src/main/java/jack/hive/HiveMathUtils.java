@@ -1,9 +1,13 @@
 package jack.hive;
 
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
 import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by zjchai on 16/9/11.
@@ -23,8 +27,8 @@ public class HiveMathUtils implements IHiveMathUtils {
         float height = current.height();
         float left = pointF.x - width / 2;
         float right = pointF.x + width / 2;
-        float top = pointF.x - height / 2;
-        float bottom = pointF.x + height / 2;
+        float top = pointF.y - height / 2;
+        float bottom = pointF.y + height / 2;
         return new RectF(left, top, right, bottom);
     }
 
@@ -33,7 +37,6 @@ public class HiveMathUtils implements IHiveMathUtils {
         double distance = getDistanceOfNeighbourCenter(length);
         double x = distance * Math.cos(number * Math.PI / 6);
         double y = distance * Math.sin(number * Math.PI / 6);
-        Log.d(TAG, String.format("calculateVerticalCenterPoint: x : %f, y : %f.",x,y));
         PointF result = clone(current);
         result.offset((float) x, (float) y);
         return result;
@@ -69,9 +72,104 @@ public class HiveMathUtils implements IHiveMathUtils {
             case 5:
                 return HiveConstants.VERTICAL_SIX;
             default:
-                Log.e(TAG, "i must < 6 and > 0.");
-                return HiveConstants.VERTICAL_ONE;
+                throw new IllegalArgumentException("i must >=0 and <6.");
         }
     }
+
+    @Override
+    public HivePositionInfo getFloorOfPosition(int position) {
+        if (position < 0) {
+            throw new IllegalArgumentException("position must be >= 0");
+        } else if (position == 0) {
+            return new HivePositionInfo(0, 0);
+        } else {
+            int i = 0;
+            position -= 1; //减去第0层的一个
+            int number;
+            do {
+                i++;
+                number = getNumberOfFloor(i);
+                position -= number;
+            } while (position >= 0);
+            return new HivePositionInfo(i, position + number);
+        }
+    }
+
+    @Override
+    public int getNumberOfFloor(int floor) {
+        if (floor < 0) {
+            throw new IllegalArgumentException("floor must be >= 0");
+        } else if (floor == 0) {
+            return 1;
+        } else {
+            return floor * 6;
+        }
+    }
+
+    @Override
+    public float calculateLength(@NonNull RectF rectF, @HiveLayoutManager.Orientation int orientation) {
+        if (orientation == HiveLayoutManager.HORIZONTAL) {
+            return rectF.width() / 2;
+        } else {
+            return rectF.height() / 2;
+        }
+    }
+
+    @Override
+    public float calculateLength(@NonNull Rect rect, @HiveLayoutManager.Orientation int orientation) {
+        return calculateLength(new RectF(rect.left, rect.top, rect.right, rect.bottom), orientation);
+    }
+
+
+    @Override
+    public List<RectF> getRectListOfFloor(@NonNull List<RectF> lastFloorRects, float length, int floor) {
+        Log.d(TAG, String.format("getRectListOfFloor: length : %f, floor : %d", length, floor));
+        if (floor <= 0) {
+            throw new IllegalArgumentException("floor must > 0 .");
+        } else if (floor == 1) { //第一层特殊处理
+            List<RectF> result = new ArrayList<>();
+            for (int i = 0; i < 6; i++) {
+                result.add(calculateVerticalItemBounds(lastFloorRects.get(0), getVerticalNumber(i), length));
+            }
+            return result;
+        } else { // 2~N层采用下面的方法
+            int lastFloor = floor - 1;
+            List<RectF> result = new ArrayList<>();
+            int number = getNumberOfFloor(lastFloor);
+
+            for (int i = 0; i < number; i++) {
+                if (isCorner(lastFloor, i)) {
+                    result.addAll(getNextRectListOfCorner(lastFloorRects.get(i), lastFloor, length, i));
+                } else {
+                    result.add(getNextRectOfMiddle(lastFloorRects.get(i), lastFloor, length, i));
+                }
+            }
+
+            return result;
+        }
+    }
+
+    private List<RectF> getNextRectListOfCorner(RectF cornerRectF, int cornerFloor, float length, int index) {
+        List<RectF> result = new ArrayList<>();
+        for (int i = 0; i < 2; i++) {
+            int number = getVerticalNumber((i + index / cornerFloor) % 6);
+            result.add(calculateVerticalItemBounds(cornerRectF, number, length));
+        }
+        return result;
+    }
+
+    private RectF getNextRectOfMiddle(RectF middleRectF, int middleFloor, float length, int index) {
+        int number = getVerticalNumber((index / middleFloor + 1) % 6);
+        RectF result = calculateVerticalItemBounds(middleRectF, number, length);
+        return result;
+    }
+
+    private boolean isCorner(int floor, int index) {
+        if (floor < 0 || index < 0) {
+            throw new IllegalArgumentException("floor and index must >= 0");
+        }
+        return index % floor == 0;
+    }
+
 
 }

@@ -19,16 +19,17 @@ import java.util.IllegalFormatException;
 public class HiveDrawable extends Drawable {
 
     private static final String TAG = HiveDrawable.class.getSimpleName();
+    private IHiveMathUtils hiveMathUtils ;
     private Rect mRect = new Rect();
     private Paint mPaint;
     private Path mPath;
     private BitmapShader mShader;
     private Bitmap mBitmap;
 
-    @HiveLayoutHelper.Orientation
+    @HiveLayoutManager.Orientation
     private int mOrientation;
 
-    public HiveDrawable(@HiveLayoutHelper.Orientation int orientation) {
+    public HiveDrawable(@HiveLayoutManager.Orientation int orientation) {
         this(orientation, null);
     }
 
@@ -39,6 +40,8 @@ public class HiveDrawable extends Drawable {
     }
 
     private void init() {
+        hiveMathUtils = HiveMathUtils.getInstance() ;
+
         initPaint();
         initPath();
     }
@@ -78,8 +81,8 @@ public class HiveDrawable extends Drawable {
 
     private void initPath() {
         ensurePath();
-        if (mOrientation == HiveLayoutHelper.HORIZONTAL) {
-            float l = (float) (mRect.width() / 2);
+        float l = hiveMathUtils.calculateLength(mRect,mOrientation) ;
+        if (mOrientation == HiveLayoutManager.HORIZONTAL) {
             float h = (float) (Math.sqrt(3) * l);
             float top = (mRect.height() - h) / 2;
             mPath.reset();
@@ -91,8 +94,7 @@ public class HiveDrawable extends Drawable {
             mPath.lineTo((float) (l * 1.5), top);
             mPath.lineTo(l / 2, top);
             mPath.close();
-        } else if (mOrientation == HiveLayoutHelper.VERTICAL) {
-            float l = (float) (mRect.height() / 2);
+        } else if (mOrientation == HiveLayoutManager.VERTICAL) {
             float w = (float) (Math.sqrt(3) * l);
             float left = (mRect.width() - w) / 2;
             mPath.reset();
@@ -157,7 +159,7 @@ public class HiveDrawable extends Drawable {
         return super.getIntrinsicHeight();
     }
 
-    @HiveLayoutHelper.Orientation
+    @HiveLayoutManager.Orientation
     public int getOrientation() {
         return mOrientation;
     }

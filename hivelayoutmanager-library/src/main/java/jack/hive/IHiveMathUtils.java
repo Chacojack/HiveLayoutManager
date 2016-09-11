@@ -2,8 +2,11 @@ package jack.hive;
 
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
+
+import java.util.List;
 
 /**
  * Created by zjchai on 16/9/11.
@@ -28,4 +31,14 @@ public interface IHiveMathUtils {
 
     @HiveConstants.VerticalNumber
     int getVerticalNumber(int i);
+
+    HivePositionInfo getFloorOfPosition(int position);
+
+    int getNumberOfFloor(int floor);
+
+    float calculateLength(@NonNull RectF rectF, @HiveLayoutManager.Orientation int orientation);
+
+    float calculateLength(@NonNull Rect rect, @HiveLayoutManager.Orientation int orientation);
+
+    List<RectF> getRectListOfFloor(@NonNull List<RectF> lastFloorRects, float length, int floor);
 }
