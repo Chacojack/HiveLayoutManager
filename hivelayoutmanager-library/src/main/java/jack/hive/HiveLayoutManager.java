@@ -8,19 +8,30 @@ import android.view.ViewGroup;
 /**
  * Created by zjchai on 16/9/9.
  */
-public class HiveLayoutManager extends RecyclerView.LayoutManager{
+public class HiveLayoutManager extends RecyclerView.LayoutManager {
 
 
     private static final String TAG = HiveLayoutManager.class.getSimpleName();
 
-    HiveLayoutHelper helper ;
+    public static final int HORIZONTAL = HiveLayoutHelper.HORIZONTAL;
 
-    public HiveLayoutManager() {
-        init() ; 
+    public static final int VERTICAL = HiveLayoutHelper.VERTICAL;
+
+
+
+    HiveLayoutHelper helper;
+    AnchorInfo anchorInfo ;
+
+    int mOrientation;
+
+
+    public HiveLayoutManager(int orientation) {
+        mOrientation = orientation;
+        init();
     }
 
     private void init() {
-        helper = HiveLayoutHelper.getInstance() ;
+        helper = HiveLayoutHelper.getInstance(this);
     }
 
     @Override
@@ -31,35 +42,43 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager{
 
     @Override
     public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
-
+        initAnchorInfo() ;
         detachAndScrapAttachedViews(recycler);
 
         int itemCount = state.getItemCount();
 
-        int left , top ;
-        left = top = 0 ;
+        int left, top;
+        left = top = 0;
 
         for (int i = 0; i < itemCount; i++) {
             View view = recycler.getViewForPosition(i);
             addView(view);
-            measureChildWithMargins(view,0,0);
+            measureChildWithMargins(view, 0, 0);
 
             int width = getDecoratedMeasuredWidth(view);
             int height = getDecoratedMeasuredHeight(view);
 
-            layoutDecoratedWithMargins(view,left,top,left+width,top+height);
+            helper.getChildBounds(i) ;
 
-            left += width ;
-            top += height ;
+            left += width;
+            top += height;
 
         }
 
     }
 
+    private void initAnchorInfo() {
+        if (anchorInfo == null) {
+            anchorInfo = new AnchorInfo() ;
+            anchorInfo.anchorX = getWidth() / 2;
+            anchorInfo.anchorY = getHeight() / 2 ;
+        }
+    }
+
 
     @Override
     public int scrollHorizontallyBy(int dx, RecyclerView.Recycler recycler, RecyclerView.State state) {
-        Log.d(TAG, String.format("scrollHorizontallyBy: dx : %d",dx));
+        Log.d(TAG, String.format("scrollHorizontallyBy: dx : %d", dx));
 
         offsetChildrenHorizontal(-dx);
 
@@ -68,7 +87,7 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager{
 
     @Override
     public int scrollVerticallyBy(int dy, RecyclerView.Recycler recycler, RecyclerView.State state) {
-        Log.d(TAG, String.format("scrollHorizontallyBy: dy : %d",dy));
+        Log.d(TAG, String.format("scrollHorizontallyBy: dy : %d", dy));
 
         offsetChildrenVertical(-dy);
 
@@ -87,10 +106,13 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager{
     }
 
 
+    public int getmOrientation() {
+        return mOrientation;
+    }
 
     class AnchorInfo {
 
-        int position ;
+        int anchorX , anchorY;
 
     }
 
