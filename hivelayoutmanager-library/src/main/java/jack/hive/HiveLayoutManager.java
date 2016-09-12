@@ -161,7 +161,6 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager {
 
     @Override
     public int scrollHorizontallyBy(int dx, RecyclerView.Recycler recycler, RecyclerView.State state) {
-        Log.d(TAG, String.format("scrollHorizontallyBy: dx : %d", dx));
 
         offsetChildrenHorizontal(-dx);
         layoutState.offsetX += -dx;
@@ -176,7 +175,6 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager {
         int count = getChildCount();
         for (int i = count - 1; i >= 0; i--) {
             View view = getChildAt(i);
-            Log.d(TAG, "scrapOutSetViews: --------> view : " + view + " , i : " + i);
             if (!RectF.intersects(new RectF(0, 0, getWidth(), getHeight()), new RectF(view.getLeft(), view.getTop(), view.getRight(), view.getBottom()))) {
                 int position = getPosition(view);
                 booleanMap.clear(position);
@@ -192,7 +190,6 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager {
 
     @Override
     public int scrollVerticallyBy(int dy, RecyclerView.Recycler recycler, RecyclerView.State state) {
-        Log.d(TAG, String.format("scrollHorizontallyBy: dy : %d", dy));
 
         offsetChildrenVertical(-dy);
         layoutState.offsetY += -dy;
