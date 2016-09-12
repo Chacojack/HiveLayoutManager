@@ -32,7 +32,7 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager {
     AnchorInfo anchorInfo;
     LayoutState layoutState;
     final List<List<RectF>> floors = new ArrayList<>();
-    final HiveBucket booleanMap = new HiveBucket() ;
+    final HiveBucket booleanMap = new HiveBucket();
     int mOrientation;
 
 
@@ -58,13 +58,13 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager {
     @Override
     public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
 
-        detachAndScrapAttachedViews(recycler);
         int itemCount = state.getItemCount();
         if (itemCount <= 0) {
             return;
         }
         initAnchorInfo(recycler);
         initFloors();
+        detachAndScrapAttachedViews(recycler);
 
         booleanMap.reset();
 
@@ -167,12 +167,27 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager {
         layoutState.offsetX += -dx;
         layoutState.lastScrollDeltaX = dx;
 
+        scrapOutSetViews(recycler);
+
         return scrollBy(dx, recycler, state);
     }
 
+    private void scrapOutSetViews(RecyclerView.Recycler recycler) {
+        int count = getChildCount();
+        for (int i = count - 1; i >= 0; i--) {
+            View view = getChildAt(i);
+            Log.d(TAG, "scrapOutSetViews: --------> view : " + view + " , i : " + i);
+            if (!RectF.intersects(new RectF(0, 0, getWidth(), getHeight()), new RectF(view.getLeft(), view.getTop(), view.getRight(), view.getBottom()))) {
+                int position = getPosition(view);
+                booleanMap.clear(position);
+                detachAndScrapView(view, recycler);
+            }
+        }
+    }
+
     private int scrollBy(int distance, RecyclerView.Recycler recycler, RecyclerView.State state) {
-        fill(recycler,state);
-        return distance ;
+        fill(recycler, state);
+        return distance;
     }
 
     @Override
@@ -183,10 +198,10 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager {
         layoutState.offsetY += -dy;
         layoutState.lastScrollDeltaY = dy;
 
-        return dy;
+        scrapOutSetViews(recycler);
+
+        return scrollBy(dy, recycler, state);
     }
-
-
 
 
     @Override
