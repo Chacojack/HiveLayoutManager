@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
+<jack.hive.HiveLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/rl_img"
               android:layout_width="120dp"
               android:layout_height="120dp"
                 android:padding="4dp"
@@ -11,4 +12,4 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-</RelativeLayout>
+</jack.hive.HiveLayout>
