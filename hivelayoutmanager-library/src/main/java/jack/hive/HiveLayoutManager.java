@@ -63,8 +63,14 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager {
         }
         initAnchorInfo(recycler);
         initFloors();
+        updateLayoutState() ;
 
         fill(recycler, state);
+    }
+
+    private void updateLayoutState() {
+        layoutState.containerRect.set(0,0,getWidth(),getHeight());
+        layoutState.containerRect.offset(layoutState.offsetX,layoutState.offsetY);
     }
 
     private void fill(RecyclerView.Recycler recycler, RecyclerView.State state) {
@@ -72,20 +78,29 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager {
         if (itemCount <= 0) {
             return;
         }
+
+        checkAllRect(itemCount);
+
+
+
         for (int i = 0; i < itemCount; i++) {
-            View view = recycler.getViewForPosition(i);
-            addView(view);
-            measureChildWithMargins(view, 0, 0);
+            RectF bounds = getBounds(i) ;
 
-            HivePositionInfo positionInfo = hiveMathUtils.getFloorOfPosition(i);
+            if (RectF.intersects(bounds,layoutState.containerRect)) {
+                View view = recycler.getViewForPosition(i);
+                addView(view);
+                measureChildWithMargins(view, 0, 0);
 
-            checkFloor(positionInfo.floor);
-
-            List<RectF> floor = floors.get(positionInfo.floor);
-            RectF bounds = new RectF(floor.get(positionInfo.getPosition()));
-            bounds.offset(layoutState.offsetX,layoutState.offsetY);
-            layoutDecoratedWithMargins(view, (int) bounds.left, (int) bounds.top, (int) bounds.right, (int) bounds.bottom);
+                bounds.offset(layoutState.offsetX, layoutState.offsetY);
+                layoutDecoratedWithMargins(view, (int) bounds.left, (int) bounds.top, (int) bounds.right, (int) bounds.bottom);
+            }
         }
+    }
+
+    public RectF getBounds(int index){
+        HivePositionInfo positionInfo = hiveMathUtils.getFloorOfPosition(index);
+        List<RectF> floor = floors.get(positionInfo.floor);
+        return new RectF(floor.get(positionInfo.getPosition()));
     }
 
     private void initFloors() {
@@ -94,6 +109,11 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager {
             list.add(anchorInfo.anchorRect);
             floors.add(list);
         }
+    }
+
+    public void checkAllRect(int itemCount) {
+        HivePositionInfo positionInfo = hiveMathUtils.getFloorOfPosition(itemCount - 1);
+        checkFloor(positionInfo.floor);
     }
 
     private void checkFloor(int floor) {
@@ -184,6 +204,9 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager {
 
         int offsetX;
         int offsetY;
+
+        RectF containerRect = new RectF();
+
 
     }
 
