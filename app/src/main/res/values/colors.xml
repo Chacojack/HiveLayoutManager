@@ -4,4 +4,6 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="mint_cream">#F5FFFA</color>
+    <color name="yellow">#FFFF00</color>
+    <color name="orange">#FF8C00</color>
 </resources>

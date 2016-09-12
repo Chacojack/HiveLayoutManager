@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import java.util.Arrays;
 import java.util.List;
@@ -83,14 +84,21 @@ public class MainActivity extends AppCompatActivity {
 
     private void initViews() {
         recyclerView = (RecyclerView) findViewById(R.id.list) ;
+        findViewById(R.id.add).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                adapter.addData(R.drawable.img_1);
+                adapter.notifyDataSetChanged();
+            }
+        });
     }
 
     private void afterViews() {
         recyclerView.setLayoutManager(new HiveLayoutManager(HiveLayoutManager.VERTICAL)) ;
         recyclerView.setAdapter(adapter);
-        for (int i = 0; i < resIds.length; i++) {
-            adapter.addData(resIds[i]);
-        }
+//        for (int i = 0; i < resIds.length; i++) {
+//            adapter.addData(resIds[i]);
+//        }
 
     }
 
