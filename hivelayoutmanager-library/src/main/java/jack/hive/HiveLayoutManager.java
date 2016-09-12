@@ -32,7 +32,7 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager {
     AnchorInfo anchorInfo;
     LayoutState layoutState;
     final List<List<RectF>> floors = new ArrayList<>();
-
+    final HiveBucket booleanMap = new HiveBucket() ;
     int mOrientation;
 
 
@@ -45,6 +45,8 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager {
         helper = HiveLayoutHelper.getInstance(this);
         hiveMathUtils = HiveMathUtils.getInstance();
         layoutState = new LayoutState();
+
+        booleanMap.reset();
     }
 
     @Override
@@ -63,14 +65,15 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager {
         }
         initAnchorInfo(recycler);
         initFloors();
-        updateLayoutState() ;
+
+        booleanMap.reset();
 
         fill(recycler, state);
     }
 
     private void updateLayoutState() {
-        layoutState.containerRect.set(0,0,getWidth(),getHeight());
-        layoutState.containerRect.offset(layoutState.offsetX,layoutState.offsetY);
+        layoutState.containerRect.set(0, 0, getWidth(), getHeight());
+        layoutState.containerRect.offset(-layoutState.offsetX, -layoutState.offsetY);
     }
 
     private void fill(RecyclerView.Recycler recycler, RecyclerView.State state) {
@@ -80,15 +83,15 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager {
         }
 
         checkAllRect(itemCount);
-
-
+        updateLayoutState();
 
         for (int i = 0; i < itemCount; i++) {
-            RectF bounds = getBounds(i) ;
+            RectF bounds = getBounds(i);
 
-            if (RectF.intersects(bounds,layoutState.containerRect)) {
+            if (!booleanMap.get(i) && RectF.intersects(bounds, layoutState.containerRect)) {
                 View view = recycler.getViewForPosition(i);
                 addView(view);
+                booleanMap.set(i);
                 measureChildWithMargins(view, 0, 0);
 
                 bounds.offset(layoutState.offsetX, layoutState.offsetY);
@@ -97,7 +100,7 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager {
         }
     }
 
-    public RectF getBounds(int index){
+    public RectF getBounds(int index) {
         HivePositionInfo positionInfo = hiveMathUtils.getFloorOfPosition(index);
         List<RectF> floor = floors.get(positionInfo.floor);
         return new RectF(floor.get(positionInfo.getPosition()));
@@ -162,8 +165,14 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager {
 
         offsetChildrenHorizontal(-dx);
         layoutState.offsetX += -dx;
+        layoutState.lastScrollDeltaX = dx;
 
-        return dx;
+        return scrollBy(dx, recycler, state);
+    }
+
+    private int scrollBy(int distance, RecyclerView.Recycler recycler, RecyclerView.State state) {
+        fill(recycler,state);
+        return distance ;
     }
 
     @Override
@@ -172,9 +181,13 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager {
 
         offsetChildrenVertical(-dy);
         layoutState.offsetY += -dy;
+        layoutState.lastScrollDeltaY = dy;
 
         return dy;
     }
+
+
+
 
     @Override
     public boolean canScrollHorizontally() {
@@ -204,6 +217,11 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager {
 
         int offsetX;
         int offsetY;
+        float extraX;
+        float extraY;
+        int lastScrollDeltaX;
+        int lastScrollDeltaY;
+
 
         RectF containerRect = new RectF();
 
