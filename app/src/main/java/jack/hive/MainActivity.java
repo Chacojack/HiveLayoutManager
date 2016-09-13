@@ -3,7 +3,10 @@ package jack.hive;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
+
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
             , R.drawable.img_11
             , R.drawable.img_12
     };
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     RecyclerView recyclerView;
     HiveAdapter adapter;
@@ -47,9 +51,32 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.add).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                adapter.addData(resIds[index % resIds.length]);
-                adapter.notifyDataSetChanged();
+                int r = new Random().nextInt(adapter.getItemCount());
+                Log.d(TAG, "onClick: r" + r);
+                adapter.addData(resIds[index % resIds.length], r);
+                adapter.notifyItemInserted(r);
                 index++;
+            }
+        });
+        findViewById(R.id.remove).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int r = new Random().nextInt(adapter.getItemCount());
+                Log.d(TAG, "onClick: r" + r);
+                adapter.remove(r);
+                adapter.notifyItemRemoved(r);
+                index--;
+            }
+        });
+        findViewById(R.id.move).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int r = new Random().nextInt(adapter.getItemCount());
+                int r2 = new Random().nextInt(adapter.getItemCount());
+                Log.d(TAG, "onClick: r" + r);
+                adapter.move(r,r2);
+                adapter.notifyItemMoved(r,r2);
+                index--;
             }
         });
     }

@@ -32,7 +32,20 @@ public class HiveAdapter extends RecyclerView.Adapter<ImageViewHolder>{
         return resId.size();
     }
 
+    public void addData(Integer data,int index) {
+        resId.add(index,data) ;
+    }
+
     public void addData(Integer data) {
         resId.add(data) ;
+    }
+
+    public void remove(int index){
+        resId.remove(index) ;
+    }
+
+    public void move(int r, int r2) {
+        Integer id = resId.remove(r);
+        resId.add(r2,id) ;
     }
 }
