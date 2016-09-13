@@ -64,11 +64,16 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager {
         }
         initAnchorInfo(recycler);
         initFloors();
+        initEdgeDistance();
         detachAndScrapAttachedViews(recycler);
 
         booleanMap.reset();
 
         fill(recycler, state);
+    }
+
+    private void initEdgeDistance() {
+        layoutState.edgeDistance.set(getWidth() / 2, getHeight() / 2, getWidth() / 2, getHeight() / 2);
     }
 
     private void updateLayoutState() {
@@ -95,9 +100,21 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager {
                 measureChildWithMargins(view, 0, 0);
 
                 bounds.offset(layoutState.offsetX, layoutState.offsetY);
+
+                calculateEdgeDistance(bounds.left, bounds.top, bounds.right, bounds.bottom);
+
                 layoutDecoratedWithMargins(view, (int) bounds.left, (int) bounds.top, (int) bounds.right, (int) bounds.bottom);
             }
         }
+    }
+
+    private void calculateEdgeDistance(float left, float top, float right, float bottom) {
+        RectF temp = layoutState.edgeDistance;
+        float eLeft = Math.min(temp.left, left);
+        float eTop = Math.min(temp.top, top);
+        float eRight = Math.min(temp.right, getWidth() - right);
+        float eBottom = Math.min(temp.bottom, getHeight() - bottom);
+        layoutState.edgeDistance.set(eLeft, eTop, eRight, eBottom);
     }
 
     public RectF getBounds(int index) {
@@ -161,14 +178,32 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager {
 
     @Override
     public int scrollHorizontallyBy(int dx, RecyclerView.Recycler recycler, RecyclerView.State state) {
+        if ((layoutState.edgeDistance.left < 0 && dx < 0) || (layoutState.edgeDistance.right < 0 && dx > 0)) {
+            float distance = dx < 0 ? Math.max(layoutState.edgeDistance.left ,dx) : Math.min(-layoutState.edgeDistance.right,dx) ;
+            doScrollHorizontalBx(recycler, state, distance);
+            return (int) distance;
+        } else if( layoutState.offsetX != 0){
+            if (layoutState.offsetX*dx > 0) {
+                float distance = (Math.abs(dx) / dx ) * Math.min(Math.abs(layoutState.offsetX),Math.abs(dx)) ;
+                doScrollHorizontalBx(recycler,state,distance);
+                return (int) distance;
+            } else {
+                return 0;
+            }
+        } else {
+            return 0 ;
+        }
+    }
 
-        offsetChildrenHorizontal(-dx);
-        layoutState.offsetX += -dx;
-        layoutState.lastScrollDeltaX = dx;
+    private void doScrollHorizontalBx(RecyclerView.Recycler recycler, RecyclerView.State state, float distance) {
+        layoutState.edgeDistance.left -= distance ;
+        layoutState.edgeDistance.right += distance ;
+        offsetChildrenHorizontal((int) -distance);
+        layoutState.offsetX -= distance;
+        layoutState.lastScrollDeltaX = (int) distance;
 
         scrapOutSetViews(recycler);
-
-        return scrollBy(dx, recycler, state);
+        scrollBy((int) distance, recycler, state);
     }
 
     private void scrapOutSetViews(RecyclerView.Recycler recycler) {
@@ -191,13 +226,40 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager {
     @Override
     public int scrollVerticallyBy(int dy, RecyclerView.Recycler recycler, RecyclerView.State state) {
 
-        offsetChildrenVertical(-dy);
-        layoutState.offsetY += -dy;
-        layoutState.lastScrollDeltaY = dy;
+        if ((layoutState.edgeDistance.top < 0 && dy < 0) || (layoutState.edgeDistance.bottom < 0 && dy > 0)) {
+            float distance = dy < 0 ? Math.max(layoutState.edgeDistance.top ,dy) : Math.min(-layoutState.edgeDistance.bottom,dy) ;
+            doScrollVerticalBy(recycler, state, distance);
+            return (int) distance;
+        } else if( layoutState.offsetY != 0){
+            if (layoutState.offsetY*dy > 0) {
+                float distance = (Math.abs(dy) / dy ) * Math.min(Math.abs(layoutState.offsetY),Math.abs(dy)) ;
+                doScrollVerticalBy(recycler,state,distance);
+                return (int) distance;
+            } else {
+                return 0;
+            }
+        } else {
+            return 0 ;
+        }
+
+//        offsetChildrenVertical(-dy);
+//        layoutState.offsetY += -dy;
+//        layoutState.lastScrollDeltaY = dy;
+//
+//        scrapOutSetViews(recycler);
+//
+//        return scrollBy(dy, recycler, state);
+    }
+
+    private void doScrollVerticalBy(RecyclerView.Recycler recycler, RecyclerView.State state, float distance){
+        layoutState.edgeDistance.top -= distance ;
+        layoutState.edgeDistance.bottom += distance ;
+        offsetChildrenVertical((int) -distance);
+        layoutState.offsetY -= distance;
+        layoutState.lastScrollDeltaY = (int) distance;
 
         scrapOutSetViews(recycler);
-
-        return scrollBy(dy, recycler, state);
+        scrollBy((int) distance, recycler, state);
     }
 
 
@@ -234,8 +296,10 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager {
         int lastScrollDeltaX;
         int lastScrollDeltaY;
 
+        final RectF edgeDistance = new RectF();
 
-        RectF containerRect = new RectF();
+
+        final RectF containerRect = new RectF();
 
 
     }
