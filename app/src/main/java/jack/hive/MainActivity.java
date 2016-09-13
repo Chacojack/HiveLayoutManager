@@ -76,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "onClick: r" + r);
                 adapter.move(r,r2);
                 adapter.notifyItemMoved(r,r2);
-                index--;
             }
         });
     }
