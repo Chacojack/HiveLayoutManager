@@ -6,18 +6,11 @@
     android:background="@color/mint_cream"
     >
 
-
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:background="@color/orange"
+        android:layout_height="match_parent"
         />
-
-    <!--<jack.hive.HiveTestView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"/>-->
 
     <Button
         android:id="@+id/add"
