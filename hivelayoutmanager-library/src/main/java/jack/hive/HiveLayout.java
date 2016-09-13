@@ -1,6 +1,7 @@
 package jack.hive;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
@@ -13,6 +14,8 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.RelativeLayout;
 
+import jack.hivelayoutmanager_library.R;
+
 /**
  * Created by zjchai on 16/9/12.
  */
@@ -21,41 +24,42 @@ public class HiveLayout extends RelativeLayout {
 
     private static final String TAG = HiveLayout.class.getSimpleName();
 
-    Xfermode xfermode = new Xfermode() ;
+    private int orientation ;
 
     public HiveLayout(Context context) {
-        super(context);
-        init() ;
-    }
-
-    private void init() {
-
+        this(context,null);
     }
 
     public HiveLayout(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs,0);
     }
 
     public HiveLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-    }
 
+        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.HiveLayout, defStyleAttr,0) ;
+        orientation = array.getInt(R.styleable.HiveLayout_orientation,HiveLayoutManager.VERTICAL) ;
+
+        array.recycle();
+    }
 
 
     @Override
     protected void dispatchDraw(Canvas canvas) {
-//        Log.d(TAG, String.format("onDraw: %d,%d", canvas.getWidth(),canvas.getHeight()));
         Bitmap.Config config = Bitmap.Config.ARGB_8888 ;
         Bitmap bitmap = Bitmap.createBitmap(getWidth(),getHeight(),config) ;
         Canvas temp = new Canvas(bitmap) ;
         super.dispatchDraw(temp);
-//        super.dispatchDraw(canvas);
-
-        Drawable drawable = new HiveDrawable(HiveLayoutManager.VERTICAL,bitmap);
+        Drawable drawable = new HiveDrawable(orientation,bitmap);
         drawable.setBounds(getPaddingLeft(),getPaddingTop(),getWidth()-getPaddingRight(),getHeight()-getPaddingBottom());
-//        setBackground(drawable);
         drawable.draw(canvas);
-//        canvas.drawBitmap(bitmap,0,0,null);
+    }
 
+    public int getOrientation() {
+        return orientation;
+    }
+
+    public void setOrientation(@HiveLayoutManager.Orientation int orientation) {
+        this.orientation = orientation;
     }
 }

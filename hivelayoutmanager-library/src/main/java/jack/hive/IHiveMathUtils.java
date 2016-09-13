@@ -13,7 +13,7 @@ import java.util.List;
  */
 public interface IHiveMathUtils {
 
-    RectF calculateVerticalItemBounds(@NonNull RectF current, @HiveConstants.VerticalNumber int number, float length);
+    RectF calculateItemBounds(@NonNull RectF current, int number, float length);
 
     /**
      * calculate center point of the number hexagon beside of the current point
@@ -23,7 +23,7 @@ public interface IHiveMathUtils {
      * @param length
      * @return
      */
-    PointF calculateVerticalCenterPoint(@NonNull PointF current, @HiveConstants.VerticalNumber int number, float length);
+    PointF calculateCenterPoint(@NonNull PointF current, int number, float length);
 
     double getDistanceOfNeighbourCenter(float length);
 
@@ -31,6 +31,9 @@ public interface IHiveMathUtils {
 
     @HiveConstants.VerticalNumber
     int getVerticalNumber(int i);
+
+    @HiveConstants.HorizontalNumber
+    int getHorizontalNumber(int i);
 
     HivePositionInfo getFloorOfPosition(int position);
 
@@ -40,5 +43,5 @@ public interface IHiveMathUtils {
 
     float calculateLength(@NonNull Rect rect, @HiveLayoutManager.Orientation int orientation);
 
-    List<RectF> getRectListOfFloor(@NonNull List<RectF> lastFloorRects, float length, int floor);
+    List<RectF> getRectListOfFloor(@NonNull List<RectF> lastFloorRects, float length, int floor, @HiveLayoutManager.Orientation int orientation);
 }

@@ -33,7 +33,7 @@ public class HiveDrawable extends Drawable {
         this(orientation, null);
     }
 
-    public HiveDrawable(int orientation, Bitmap bitmap) {
+    public HiveDrawable(@HiveLayoutManager.Orientation int orientation, Bitmap bitmap) {
         this.mOrientation = orientation;
         init();
         setBitmap(bitmap);

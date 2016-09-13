@@ -52,7 +52,7 @@ public class HiveTestView extends View {
         current.set(width / 2f,height / 2f );
 
         for (int i = 0; i < 6; i++) {
-            PointF pointF = hiveMathUtils.calculateVerticalCenterPoint(current, hiveMathUtils.getVerticalNumber(i), 100);
+            PointF pointF = hiveMathUtils.calculateCenterPoint(current, hiveMathUtils.getVerticalNumber(i), 100);
             Log.d(TAG, "onDraw: "+pointF);
             canvas.drawPoint(pointF.x,pointF.y,paint);
         }

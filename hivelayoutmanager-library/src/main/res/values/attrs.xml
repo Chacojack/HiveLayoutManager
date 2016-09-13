@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="HiveLayout">
+        <attr name="orientation" >
+            <flag name="vertical" value="1"/>
+            <flag name="horizontal" value="0"/>
+        </attr>
+    </declare-styleable>
+
+</resources>

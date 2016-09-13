@@ -130,7 +130,7 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager {
             for (int i = floors.size(); i <= floor; i++) {
                 int i1 = i - 1;
                 Log.d(TAG, "checkFloor: i1 : " + i1 + " , i : " + i);
-                List<RectF> temp = hiveMathUtils.getRectListOfFloor(floors.get(i1), anchorInfo.length, floor);
+                List<RectF> temp = hiveMathUtils.getRectListOfFloor(floors.get(i1), anchorInfo.length, floor, mOrientation);
                 floors.add(temp);
             }
         }

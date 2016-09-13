@@ -21,8 +21,8 @@ public class HiveMathUtils implements IHiveMathUtils {
     }
 
     @Override
-    public RectF calculateVerticalItemBounds(@NonNull RectF current, @HiveConstants.VerticalNumber int number, float length) {
-        PointF pointF = calculateVerticalCenterPoint(new PointF(current.centerX(), current.centerY()), number, length);
+    public RectF calculateItemBounds(@NonNull RectF current, int number, float length) {
+        PointF pointF = calculateCenterPoint(new PointF(current.centerX(), current.centerY()), number, length);
         float width = current.width();
         float height = current.height();
         float left = pointF.x - width / 2;
@@ -33,7 +33,7 @@ public class HiveMathUtils implements IHiveMathUtils {
     }
 
     @Override
-    public PointF calculateVerticalCenterPoint(@NonNull PointF current, @HiveConstants.VerticalNumber int number, float length) {
+    public PointF calculateCenterPoint(@NonNull PointF current, int number, float length) {
         double distance = getDistanceOfNeighbourCenter(length);
         double x = distance * Math.cos(number * Math.PI / 6);
         double y = distance * Math.sin(number * Math.PI / 6);
@@ -71,6 +71,26 @@ public class HiveMathUtils implements IHiveMathUtils {
                 return HiveConstants.VERTICAL_FIVE;
             case 5:
                 return HiveConstants.VERTICAL_SIX;
+            default:
+                throw new IllegalArgumentException("i must >=0 and <6.");
+        }
+    }
+
+    @Override
+    public int getHorizontalNumber(int i) {
+        switch (i) {
+            case 0:
+                return HiveConstants.HORIZONTAL_ONE;
+            case 1:
+                return HiveConstants.HORIZONTAL_TWO;
+            case 2:
+                return HiveConstants.HORIZONTAL_THREE;
+            case 3:
+                return HiveConstants.HORIZONTAL_FOUR;
+            case 4:
+                return HiveConstants.HORIZONTAL_FIVE;
+            case 5:
+                return HiveConstants.HORIZONTAL_SIX;
             default:
                 throw new IllegalArgumentException("i must >=0 and <6.");
         }
@@ -122,14 +142,14 @@ public class HiveMathUtils implements IHiveMathUtils {
 
 
     @Override
-    public List<RectF> getRectListOfFloor(@NonNull List<RectF> lastFloorRects, float length, int floor) {
+    public List<RectF> getRectListOfFloor(@NonNull List<RectF> lastFloorRects, float length, int floor, @HiveLayoutManager.Orientation int orientation) {
         Log.d(TAG, String.format("getRectListOfFloor: length : %f, floor : %d", length, floor));
         if (floor <= 0) {
             throw new IllegalArgumentException("floor must > 0 .");
         } else if (floor == 1) { //第一层特殊处理
             List<RectF> result = new ArrayList<>();
             for (int i = 0; i < 6; i++) {
-                result.add(calculateVerticalItemBounds(lastFloorRects.get(0), getVerticalNumber(i), length));
+                result.add(calculateItemBounds(lastFloorRects.get(0), getNumber(i,orientation), length));
             }
             return result;
         } else { // 2~N层采用下面的方法
@@ -139,9 +159,9 @@ public class HiveMathUtils implements IHiveMathUtils {
 
             for (int i = 0; i < number; i++) {
                 if (isCorner(lastFloor, i)) {
-                    result.addAll(getNextRectListOfCorner(lastFloorRects.get(i), lastFloor, length, i));
+                    result.addAll(getNextRectListOfCorner(lastFloorRects.get(i), lastFloor, length, i,orientation));
                 } else {
-                    result.add(getNextRectOfMiddle(lastFloorRects.get(i), lastFloor, length, i));
+                    result.add(getNextRectOfMiddle(lastFloorRects.get(i), lastFloor, length, i,orientation));
                 }
             }
 
@@ -149,18 +169,18 @@ public class HiveMathUtils implements IHiveMathUtils {
         }
     }
 
-    private List<RectF> getNextRectListOfCorner(RectF cornerRectF, int cornerFloor, float length, int index) {
+    private List<RectF> getNextRectListOfCorner(RectF cornerRectF, int cornerFloor, float length, int index, @HiveLayoutManager.Orientation int orientation) {
         List<RectF> result = new ArrayList<>();
         for (int i = 0; i < 2; i++) {
-            int number = getVerticalNumber((i + index / cornerFloor) % 6);
-            result.add(calculateVerticalItemBounds(cornerRectF, number, length));
+            int number = getNumber((i + index / cornerFloor) % 6, orientation);
+            result.add(calculateItemBounds(cornerRectF, number, length));
         }
         return result;
     }
 
-    private RectF getNextRectOfMiddle(RectF middleRectF, int middleFloor, float length, int index) {
-        int number = getVerticalNumber((index / middleFloor + 1) % 6);
-        RectF result = calculateVerticalItemBounds(middleRectF, number, length);
+    private RectF getNextRectOfMiddle(RectF middleRectF, int middleFloor, float length, int index, @HiveLayoutManager.Orientation int orientation) {
+        int number = getNumber((index / middleFloor + 1) % 6, orientation);
+        RectF result = calculateItemBounds(middleRectF, number, length);
         return result;
     }
 
@@ -169,6 +189,16 @@ public class HiveMathUtils implements IHiveMathUtils {
             throw new IllegalArgumentException("floor and index must >= 0");
         }
         return index % floor == 0;
+    }
+
+    public int getNumber(int index, @HiveLayoutManager.Orientation int orientation) {
+        if (orientation == HiveLayoutManager.HORIZONTAL) {
+            return getHorizontalNumber(index);
+        } else if (orientation == HiveLayoutManager.VERTICAL) {
+            return getVerticalNumber(index);
+        } else {
+            throw new IllegalArgumentException("orientation must be HiveLayoutManager.VERTICAL or HiveLayoutManager.HORIZONTAL");
+        }
     }
 
 

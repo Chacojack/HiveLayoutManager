@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void afterViews() {
-        recyclerView.setLayoutManager(new HiveLayoutManager(HiveLayoutManager.VERTICAL)) ;
+        recyclerView.setLayoutManager(new HiveLayoutManager(HiveLayoutManager.HORIZONTAL)) ;
         recyclerView.setAdapter(adapter);
 //        for (int i = 0; i < resIds.length; i++) {
 //            adapter.addData(resIds[i]);
