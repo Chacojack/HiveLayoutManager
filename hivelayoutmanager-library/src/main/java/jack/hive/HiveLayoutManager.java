@@ -58,6 +58,7 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager {
     @Override
     public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
 
+        detachAndScrapAttachedViews(recycler);
         int itemCount = state.getItemCount();
         if (itemCount <= 0) {
             return;

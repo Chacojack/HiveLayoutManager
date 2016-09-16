@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.add).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int r = new Random().nextInt(adapter.getItemCount());
+                int r = getRandomPosition();
                 Log.d(TAG, "onClick: r" + r);
                 adapter.addData(resIds[index % resIds.length], r);
                 adapter.notifyItemInserted(r);
@@ -61,18 +61,20 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.remove).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int r = new Random().nextInt(adapter.getItemCount());
-                Log.d(TAG, "onClick: r" + r);
-                adapter.remove(r);
-                adapter.notifyItemRemoved(r);
-                index--;
+                if (adapter.getItemCount() != 0) {
+                    int r = getRandomPosition();
+                    Log.d(TAG, "onClick: r" + r);
+                    adapter.remove(r);
+                    adapter.notifyItemRemoved(r);
+                    index--;
+                }
             }
         });
         findViewById(R.id.move).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int r = new Random().nextInt(adapter.getItemCount());
-                int r2 = new Random().nextInt(adapter.getItemCount());
+                int r = getRandomPosition();
+                int r2 = getRandomPosition();
                 Log.d(TAG, "onClick: r" + r);
                 adapter.move(r,r2);
                 adapter.notifyItemMoved(r,r2);
@@ -80,8 +82,17 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private int getRandomPosition() {
+        int count = adapter.getItemCount();
+        if(count>0){
+            return new Random().nextInt(count);
+        } else {
+            return 0 ;
+        }
+    }
+
     private void afterViews() {
-        recyclerView.setLayoutManager(new HiveLayoutManager(HiveLayoutManager.HORIZONTAL));
+        recyclerView.setLayoutManager(new HiveLayoutManager(HiveLayoutManager.VERTICAL));
         recyclerView.setAdapter(adapter);
         for (int i = 0; i < index; i++) {
             adapter.addData(resIds[i]);

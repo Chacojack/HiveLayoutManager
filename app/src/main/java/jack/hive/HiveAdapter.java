@@ -24,7 +24,7 @@ public class HiveAdapter extends RecyclerView.Adapter<ImageViewHolder>{
 
     @Override
     public void onBindViewHolder(ImageViewHolder holder, int position) {
-        holder.bind(resId.get(position)) ;
+        holder.bind(resId.get(position),position) ;
     }
 
     @Override
