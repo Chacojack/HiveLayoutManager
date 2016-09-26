@@ -214,7 +214,7 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager {
             if (!RectF.intersects(new RectF(0, 0, getWidth(), getHeight()), new RectF(view.getLeft(), view.getTop(), view.getRight(), view.getBottom()))) {
                 int position = getPosition(view);
                 booleanMap.clear(position);
-                detachAndScrapView(view, recycler);
+                removeAndRecycleViewAt(i, recycler);
             }
         }
     }
