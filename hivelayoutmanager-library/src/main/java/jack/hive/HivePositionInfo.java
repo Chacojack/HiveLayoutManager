@@ -3,7 +3,7 @@ package jack.hive;
 /**
  * Created by zjchai on 16/9/11.
  */
-public class HivePositionInfo {
+class HivePositionInfo {
 
     int floor ;
     int position ;
@@ -11,27 +11,9 @@ public class HivePositionInfo {
     public HivePositionInfo() {
     }
 
-    public HivePositionInfo(int floor, int position) {
+    HivePositionInfo(int floor, int position) {
         this.floor = floor;
         this.position = position;
-    }
-
-    public int getFloor() {
-        return floor;
-    }
-
-    public HivePositionInfo setFloor(int floor) {
-        this.floor = floor;
-        return this ;
-    }
-
-    public int getPosition() {
-        return position;
-    }
-
-    public HivePositionInfo setPosition(int position) {
-        this.position = position;
-        return this ;
     }
 
     @Override

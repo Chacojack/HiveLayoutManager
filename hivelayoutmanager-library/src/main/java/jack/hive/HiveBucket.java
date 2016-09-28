@@ -1,13 +1,9 @@
 package jack.hive;
 
 /**
- * Created by zjchai on 16/9/12.
+ * Bit set implementation that provides methods to offset indices.
  */
-
-/**
- * Bitset implementation that provides methods to offset indices.
- */
-public class HiveBucket {
+class HiveBucket {
 
     final static int BITS_PER_WORD = Long.SIZE;
 

@@ -10,13 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by zjchai on 16/9/11.
+ * A HiveLayoutManager math util.
  */
-public class HiveMathUtils implements IHiveMathUtils {
+class HiveMathUtils implements IHiveMathUtils {
 
     private static final String TAG = HiveMathUtils.class.getSimpleName();
 
-    public static IHiveMathUtils getInstance() {
+    static IHiveMathUtils getInstance() {
         return new HiveMathUtils();
     }
 
@@ -55,9 +55,8 @@ public class HiveMathUtils implements IHiveMathUtils {
     }
 
     @Override
-    public
     @HiveConstants.VerticalNumber
-    int getVerticalNumber(int i) {
+    public int getVerticalNumber(int i) {
         switch (i) {
             case 0:
                 return HiveConstants.VERTICAL_ONE;
@@ -77,6 +76,7 @@ public class HiveMathUtils implements IHiveMathUtils {
     }
 
     @Override
+    @HiveConstants.HorizontalNumber
     public int getHorizontalNumber(int i) {
         switch (i) {
             case 0:
@@ -149,7 +149,7 @@ public class HiveMathUtils implements IHiveMathUtils {
         } else if (floor == 1) { //第一层特殊处理
             List<RectF> result = new ArrayList<>();
             for (int i = 0; i < 6; i++) {
-                result.add(calculateItemBounds(lastFloorRects.get(0), getNumber(i,orientation), length));
+                result.add(calculateItemBounds(lastFloorRects.get(0), getNumber(i, orientation), length));
             }
             return result;
         } else { // 2~N层采用下面的方法
@@ -159,9 +159,9 @@ public class HiveMathUtils implements IHiveMathUtils {
 
             for (int i = 0; i < number; i++) {
                 if (isCorner(lastFloor, i)) {
-                    result.addAll(getNextRectListOfCorner(lastFloorRects.get(i), lastFloor, length, i,orientation));
+                    result.addAll(getNextRectListOfCorner(lastFloorRects.get(i), lastFloor, length, i, orientation));
                 } else {
-                    result.add(getNextRectOfMiddle(lastFloorRects.get(i), lastFloor, length, i,orientation));
+                    result.add(getNextRectOfMiddle(lastFloorRects.get(i), lastFloor, length, i, orientation));
                 }
             }
 
@@ -169,7 +169,8 @@ public class HiveMathUtils implements IHiveMathUtils {
         }
     }
 
-    private List<RectF> getNextRectListOfCorner(RectF cornerRectF, int cornerFloor, float length, int index, @HiveLayoutManager.Orientation int orientation) {
+    private List<RectF> getNextRectListOfCorner(RectF cornerRectF, int cornerFloor, float length
+            , int index, @HiveLayoutManager.Orientation int orientation) {
         List<RectF> result = new ArrayList<>();
         for (int i = 0; i < 2; i++) {
             int number = getNumber((i + index / cornerFloor) % 6, orientation);
@@ -178,10 +179,10 @@ public class HiveMathUtils implements IHiveMathUtils {
         return result;
     }
 
-    private RectF getNextRectOfMiddle(RectF middleRectF, int middleFloor, float length, int index, @HiveLayoutManager.Orientation int orientation) {
+    private RectF getNextRectOfMiddle(RectF middleRectF, int middleFloor, float length, int index
+            , @HiveLayoutManager.Orientation int orientation) {
         int number = getNumber((index / middleFloor + 1) % 6, orientation);
-        RectF result = calculateItemBounds(middleRectF, number, length);
-        return result;
+        return calculateItemBounds(middleRectF, number, length);
     }
 
     private boolean isCorner(int floor, int index) {
@@ -191,7 +192,7 @@ public class HiveMathUtils implements IHiveMathUtils {
         return index % floor == 0;
     }
 
-    public int getNumber(int index, @HiveLayoutManager.Orientation int orientation) {
+    private int getNumber(int index, @HiveLayoutManager.Orientation int orientation) {
         if (orientation == HiveLayoutManager.HORIZONTAL) {
             return getHorizontalNumber(index);
         } else if (orientation == HiveLayoutManager.VERTICAL) {
