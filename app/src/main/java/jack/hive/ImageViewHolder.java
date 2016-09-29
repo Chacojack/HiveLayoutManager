@@ -2,6 +2,7 @@ package jack.hive;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -26,10 +27,12 @@ public class ImageViewHolder extends RecyclerView.ViewHolder {
 
     public void bind(Integer resId,int position) {
         if (id != resId){
-            bitmap = BitmapFactory.decodeResource(imageView.getResources(), resId);
+//            bitmap = BitmapFactory.decodeResource(imageView.getResources(), resId);
         }
-        imageView.setImageDrawable(new HiveDrawable(HiveLayoutManager.VERTICAL,bitmap));
+        HiveDrawable drawable = new HiveDrawable(HiveLayoutManager.VERTICAL);
+        drawable.setColor(Color.GREEN);
+        imageView.setBackground(drawable);
         textView.setText(String.valueOf(position));
-        textView.setVisibility(View.GONE);
+//        textView.setVisibility(View.GONE);
     }
 }

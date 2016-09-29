@@ -109,6 +109,10 @@ public class HiveDrawable extends Drawable {
         }
     }
 
+    void setColor(int color){
+        mPaint.setColor(color);
+    }
+
     @Override
     public void draw(Canvas canvas) {
         canvas.drawPath(mPath, mPaint);
