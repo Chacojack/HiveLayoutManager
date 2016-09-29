@@ -17,21 +17,21 @@
             android:id="@+id/add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="add"
+            android:text="随机插入"
             />
 
         <Button
             android:id="@+id/remove"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="remove"
+            android:text="随机删除"
             />
 
         <Button
             android:id="@+id/move"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="move"
+            android:text="随机移动"
             />
 
     </LinearLayout>

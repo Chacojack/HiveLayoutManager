@@ -71,8 +71,7 @@ public class HiveDrawable extends Drawable {
 
     public void setBitmap(@NonNull Bitmap bitmap) {
         this.mBitmap = bitmap;
-        BitmapShader shader;
-        shader = new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
+        BitmapShader shader = new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
         mPaint.setShader(shader);
     }
 

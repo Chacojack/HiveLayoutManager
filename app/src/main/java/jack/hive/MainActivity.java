@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initObjects() {
+        BitmapCache.INSTANCE.init(this, 200 * 200 * 4 * 13);
         adapter = new HiveAdapter();
     }
 
@@ -76,18 +77,18 @@ public class MainActivity extends AppCompatActivity {
                 int r = getRandomPosition();
                 int r2 = getRandomPosition();
                 Log.d(TAG, "onClick: r" + r);
-                adapter.move(r,r2);
-                adapter.notifyItemMoved(r,r2);
+                adapter.move(r, r2);
+                adapter.notifyItemMoved(r, r2);
             }
         });
     }
 
     private int getRandomPosition() {
         int count = adapter.getItemCount();
-        if(count>0){
+        if (count > 0) {
             return new Random().nextInt(count);
         } else {
-            return 0 ;
+            return 0;
         }
     }
 

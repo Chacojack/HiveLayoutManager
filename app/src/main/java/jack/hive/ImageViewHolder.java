@@ -16,8 +16,6 @@ public class ImageViewHolder extends RecyclerView.ViewHolder {
 
     ImageView imageView;
     TextView textView ;
-    int id ;
-    Bitmap bitmap;
 
     public ImageViewHolder(View itemView) {
         super(itemView);
@@ -26,13 +24,10 @@ public class ImageViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(Integer resId,int position) {
-        if (id != resId){
-//            bitmap = BitmapFactory.decodeResource(imageView.getResources(), resId);
-        }
-        HiveDrawable drawable = new HiveDrawable(HiveLayoutManager.VERTICAL);
-        drawable.setColor(Color.GREEN);
-        imageView.setBackground(drawable);
+        Bitmap bitmap = BitmapCache.INSTANCE.getBitmap(resId);
+        HiveDrawable drawable = new HiveDrawable(HiveLayoutManager.VERTICAL,bitmap);
+        imageView.setImageDrawable(drawable);
         textView.setText(String.valueOf(position));
-//        textView.setVisibility(View.GONE);
+        textView.setVisibility(View.GONE);
     }
 }
