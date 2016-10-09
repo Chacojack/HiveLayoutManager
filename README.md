@@ -1,3 +1,5 @@
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/HiveLayoutManager/Lobby)
+
 # HiveLayoutManager
 
 这是一个蜂巢布局管理器，它可以在RecyclerView中实现像蜂巢一样的布局。
