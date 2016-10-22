@@ -27,12 +27,12 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager {
     /**
      * layout views in RV an horizontal direction
      */
-    static final int HORIZONTAL = HiveLayoutHelper.HORIZONTAL;
+    public static final int HORIZONTAL = HiveLayoutHelper.HORIZONTAL;
 
     /**
      * layout views in RV an vertical direction
      */
-    static final int VERTICAL = HiveLayoutHelper.VERTICAL;
+    public static final int VERTICAL = HiveLayoutHelper.VERTICAL;
 
     /**
      * the HiveLayoutManager's orientation
