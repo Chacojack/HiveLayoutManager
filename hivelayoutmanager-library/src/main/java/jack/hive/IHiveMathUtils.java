@@ -3,6 +3,7 @@ package jack.hive;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
 /**
  * A Math Util for HiveLayoutManager.
  * <p>
- * this interface include many method for calculate the position of view in RV.
+ * this interface include many method for calculate the mPosition of view in RV.
  */
 interface IHiveMathUtils {
 
@@ -69,18 +70,18 @@ interface IHiveMathUtils {
     int getHorizontalNumber(int i);
 
     /**
-     * calculate the floor of the position
+     * calculate the mFloor of the mPosition
      *
-     * @param position item position
-     * @return the floor
+     * @param position item mPosition
+     * @return the mFloor
      */
     HivePositionInfo getFloorOfPosition(int position);
 
     /**
-     * calculate all item number int the floor
+     * calculate all item number int the mFloor
      *
-     * @param floor floor
-     * @return number of the floor
+     * @param floor mFloor
+     * @return number of the mFloor
      */
     int getNumberOfFloor(int floor);
 
@@ -103,14 +104,22 @@ interface IHiveMathUtils {
     float calculateLength(@NonNull Rect rect, @HiveLayoutManager.Orientation int orientation);
 
     /**
-     * calculate current floor Rects by last floor
+     * calculate current mFloor Rects by last mFloor
      *
-     * @param lastFloorRects Rects at last floor
+     * @param lastFloorRects Rects at last mFloor
      * @param length         the length of regular hexagon
-     * @param floor          last floor
+     * @param floor          last mFloor
      * @param orientation    orientation {@link jack.hive.HiveLayoutManager.Orientation}
-     * @return RectFs at current floor
+     * @return RectFs at current mFloor
      */
     List<RectF> getRectListOfFloor(@NonNull List<RectF> lastFloorRects, float length, int floor
             , @HiveLayoutManager.Orientation int orientation);
+
+    int getTheLeftSideIndexOfTheFloor(@IntRange(from = 0) int floor, @HiveLayoutManager.Orientation int orientation, @IntRange(from = 0) int maxPosition);
+
+    int getTheRightSideIndexOfTheFloor(@IntRange(from = 0) int floor, @HiveLayoutManager.Orientation int orientation, @IntRange(from = 0) int maxPosition);
+
+    int getTheTopSideIndexOfTheFloor(@IntRange(from = 0) int floor, @HiveLayoutManager.Orientation int orientation, @IntRange(from = 0) int maxPosition);
+
+    int getTheBottomSideIndexOfTheFloor(@IntRange(from = 0) int floor, @HiveLayoutManager.Orientation int orientation, @IntRange(from = 0) int maxPosition);
 }

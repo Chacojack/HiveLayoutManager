@@ -28,8 +28,9 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     RecyclerView recyclerView;
+    HiveLayoutManager layoutManager;
     HiveAdapter adapter;
-    int index = 7;
+    int index = 39;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,11 +94,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void afterViews() {
-        recyclerView.setLayoutManager(new HiveLayoutManager(HiveLayoutManager.VERTICAL));
+        recyclerView.setLayoutManager(layoutManager = new HiveLayoutManager(HiveLayoutManager.HORIZONTAL));
         recyclerView.setAdapter(adapter);
         for (int i = 0; i < index; i++) {
-            adapter.addData(resIds[i]);
+            adapter.addData(resIds[i % resIds.length]);
         }
+//        layoutManager.setGravity(HiveLayoutManager.CENTER);
+//        layoutManager.setGravity(HiveLayoutManager.ALIGN_LEFT);
+//        layoutManager.setGravity(HiveLayoutManager.ALIGN_RIGHT);
+//        layoutManager.setGravity(HiveLayoutManager.ALIGN_TOP);
+//        layoutManager.setGravity(HiveLayoutManager.ALIGN_BOTTOM);
+//        layoutManager.setGravity(HiveLayoutManager.ALIGN_LEFT | HiveLayoutManager.ALIGN_TOP);
+//        layoutManager.setGravity(HiveLayoutManager.ALIGN_LEFT | HiveLayoutManager.ALIGN_BOTTOM);
+//        layoutManager.setGravity(HiveLayoutManager.ALIGN_RIGHT | HiveLayoutManager.ALIGN_TOP);
+        layoutManager.setGravity(HiveLayoutManager.ALIGN_RIGHT | HiveLayoutManager.ALIGN_BOTTOM);
 
     }
 

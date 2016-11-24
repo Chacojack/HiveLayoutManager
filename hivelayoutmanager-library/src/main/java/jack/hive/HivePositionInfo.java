@@ -5,22 +5,22 @@ package jack.hive;
  */
 class HivePositionInfo {
 
-    int floor ;
-    int position ;
+    int mFloor;
+    int mPosition;
 
     public HivePositionInfo() {
     }
 
     HivePositionInfo(int floor, int position) {
-        this.floor = floor;
-        this.position = position;
+        this.mFloor = floor;
+        this.mPosition = position;
     }
 
     @Override
     public String toString() {
         return "HivePositionInfo{" +
-                "floor=" + floor +
-                ", position=" + position +
+                "mFloor=" + mFloor +
+                ", mPosition=" + mPosition +
                 '}';
     }
 }

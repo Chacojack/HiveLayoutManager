@@ -25,7 +25,7 @@ public class ImageViewHolder extends RecyclerView.ViewHolder {
 
     public void bind(Integer resId,int position) {
         Bitmap bitmap = BitmapCache.INSTANCE.getBitmap(resId);
-        HiveDrawable drawable = new HiveDrawable(HiveLayoutManager.VERTICAL,bitmap);
+        HiveDrawable drawable = new HiveDrawable(HiveLayoutManager.HORIZONTAL,bitmap);
         imageView.setImageDrawable(drawable);
         textView.setText(String.valueOf(position));
         textView.setVisibility(View.GONE);

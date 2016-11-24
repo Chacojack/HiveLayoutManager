@@ -18,7 +18,7 @@ import android.util.Log;
 public class HiveDrawable extends Drawable {
 
     private static final String TAG = HiveDrawable.class.getSimpleName();
-    private IHiveMathUtils hiveMathUtils;
+    private IHiveMathUtils mHiveMathUtils;
     private Rect mRect = new Rect();
     private Paint mPaint;
     private Path mPath;
@@ -40,7 +40,7 @@ public class HiveDrawable extends Drawable {
     }
 
     private void init() {
-        hiveMathUtils = HiveMathUtils.getInstance();
+        mHiveMathUtils = HiveMathUtils.getInstance();
 
         initPaint();
         initPath();
@@ -77,7 +77,7 @@ public class HiveDrawable extends Drawable {
 
     private void initPath() {
         ensurePath();
-        float l = hiveMathUtils.calculateLength(mRect, mOrientation);
+        float l = mHiveMathUtils.calculateLength(mRect, mOrientation);
         if (mOrientation == HiveLayoutManager.HORIZONTAL) {
             float h = (float) (Math.sqrt(3) * l);
             float top = (mRect.height() - h) / 2;

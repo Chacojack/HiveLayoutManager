@@ -3,6 +3,7 @@ package jack.hive;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -99,7 +100,7 @@ class HiveMathUtils implements IHiveMathUtils {
     @Override
     public HivePositionInfo getFloorOfPosition(int position) {
         if (position < 0) {
-            throw new IllegalArgumentException("position must be >= 0");
+            throw new IllegalArgumentException("mPosition must be >= 0");
         } else if (position == 0) {
             return new HivePositionInfo(0, 0);
         } else {
@@ -118,7 +119,7 @@ class HiveMathUtils implements IHiveMathUtils {
     @Override
     public int getNumberOfFloor(int floor) {
         if (floor < 0) {
-            throw new IllegalArgumentException("floor must be >= 0");
+            throw new IllegalArgumentException("mFloor must be >= 0");
         } else if (floor == 0) {
             return 1;
         } else {
@@ -143,9 +144,9 @@ class HiveMathUtils implements IHiveMathUtils {
 
     @Override
     public List<RectF> getRectListOfFloor(@NonNull List<RectF> lastFloorRects, float length, int floor, @HiveLayoutManager.Orientation int orientation) {
-        Log.d(TAG, String.format("getRectListOfFloor: length : %f, floor : %d", length, floor));
+        Log.d(TAG, String.format("getRectListOfFloor: length : %f, mFloor : %d", length, floor));
         if (floor <= 0) {
-            throw new IllegalArgumentException("floor must > 0 .");
+            throw new IllegalArgumentException("mFloor must > 0 .");
         } else if (floor == 1) { //第一层特殊处理
             List<RectF> result = new ArrayList<>();
             for (int i = 0; i < 6; i++) {
@@ -187,7 +188,7 @@ class HiveMathUtils implements IHiveMathUtils {
 
     private boolean isCorner(int floor, int index) {
         if (floor < 0 || index < 0) {
-            throw new IllegalArgumentException("floor and index must >= 0");
+            throw new IllegalArgumentException("mFloor and index must >= 0");
         }
         return index % floor == 0;
     }
@@ -202,5 +203,57 @@ class HiveMathUtils implements IHiveMathUtils {
         }
     }
 
+    @Override
+    public int getTheLeftSideIndexOfTheFloor(@IntRange(from = 0) int floor,
+                                             @HiveLayoutManager.Orientation int orientation,
+                                             @IntRange(from = 0) final int maxPosition) {
+        if (orientation == HiveLayoutManager.VERTICAL) {
+            int temp = floor * 3;
+            return temp > maxPosition ? maxPosition : temp;
+        } else if (orientation == HiveLayoutManager.HORIZONTAL) {
+            return floor > maxPosition ? maxPosition : floor;
+        } else {
+            throw new IllegalArgumentException("orientation must be HiveLayoutManager.VERTICAL or HiveLayoutManager.HORIZONTAL");
+        }
+    }
 
+    @Override
+    public int getTheRightSideIndexOfTheFloor(@IntRange(from = 0) int floor,
+                                              @HiveLayoutManager.Orientation int orientation,
+                                              @IntRange(from = 0) final int maxPosition) {
+        if (orientation == HiveLayoutManager.VERTICAL) {
+            return 0;
+        } else if (orientation == HiveLayoutManager.HORIZONTAL) {
+            return floor * 3 > maxPosition ? 0 : floor * 4 > maxPosition ? maxPosition : floor * 4;
+        } else {
+            throw new IllegalArgumentException("orientation must be HiveLayoutManager.VERTICAL or HiveLayoutManager.HORIZONTAL");
+        }
+    }
+
+    @Override
+    public int getTheTopSideIndexOfTheFloor(@IntRange(from = 0) int floor,
+                                            @HiveLayoutManager.Orientation int orientation,
+                                            @IntRange(from = 0) final int maxPosition) {
+        if (orientation == HiveLayoutManager.VERTICAL) {
+            return floor * 3 > maxPosition ? 0 : floor * 4 > maxPosition ? maxPosition : floor * 4;
+        } else if (orientation == HiveLayoutManager.HORIZONTAL) {
+            int temp = floor * 3;
+            return temp > maxPosition ? maxPosition : temp;
+        } else {
+            throw new IllegalArgumentException("orientation must be HiveLayoutManager.VERTICAL or HiveLayoutManager.HORIZONTAL");
+        }
+    }
+
+    @Override
+    public int getTheBottomSideIndexOfTheFloor(@IntRange(from = 0) int floor,
+                                               @HiveLayoutManager.Orientation int orientation,
+                                               @IntRange(from = 0) final int maxPosition) {
+        if (orientation == HiveLayoutManager.VERTICAL) {
+            return floor > maxPosition ? maxPosition : floor;
+        } else if (orientation == HiveLayoutManager.HORIZONTAL) {
+            return 0;
+        } else {
+            throw new IllegalArgumentException("orientation must be HiveLayoutManager.VERTICAL or HiveLayoutManager.HORIZONTAL");
+        }
+    }
 }

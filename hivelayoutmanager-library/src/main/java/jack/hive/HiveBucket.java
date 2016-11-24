@@ -11,27 +11,27 @@ class HiveBucket {
 
     long mData = 0;
 
-    HiveBucket next;
+    HiveBucket mNext;
 
     void set(int index) {
         if (index >= BITS_PER_WORD) {
             ensureNext();
-            next.set(index - BITS_PER_WORD);
+            mNext.set(index - BITS_PER_WORD);
         } else {
             mData |= 1L << index;
         }
     }
 
     private void ensureNext() {
-        if (next == null) {
-            next = new HiveBucket();
+        if (mNext == null) {
+            mNext = new HiveBucket();
         }
     }
 
     void clear(int index) {
         if (index >= BITS_PER_WORD) {
-            if (next != null) {
-                next.clear(index - BITS_PER_WORD);
+            if (mNext != null) {
+                mNext.clear(index - BITS_PER_WORD);
             }
         } else {
             mData &= ~(1L << index);
@@ -42,7 +42,7 @@ class HiveBucket {
     boolean get(int index) {
         if (index >= BITS_PER_WORD) {
             ensureNext();
-            return next.get(index - BITS_PER_WORD);
+            return mNext.get(index - BITS_PER_WORD);
         } else {
             return (mData & (1L << index)) != 0;
         }
@@ -50,15 +50,15 @@ class HiveBucket {
 
     void reset() {
         mData = 0;
-        if (next != null) {
-            next.reset();
+        if (mNext != null) {
+            mNext.reset();
         }
     }
 
     void insert(int index, boolean value) {
         if (index >= BITS_PER_WORD) {
             ensureNext();
-            next.insert(index - BITS_PER_WORD, value);
+            mNext.insert(index - BITS_PER_WORD, value);
         } else {
             final boolean lastBit = (mData & LAST_BIT) != 0;
             long mask = (1L << index) - 1;
@@ -70,9 +70,9 @@ class HiveBucket {
             } else {
                 clear(index);
             }
-            if (lastBit || next != null) {
+            if (lastBit || mNext != null) {
                 ensureNext();
-                next.insert(0, lastBit);
+                mNext.insert(0, lastBit);
             }
         }
     }
@@ -80,7 +80,7 @@ class HiveBucket {
     boolean remove(int index) {
         if (index >= BITS_PER_WORD) {
             ensureNext();
-            return next.remove(index - BITS_PER_WORD);
+            return mNext.remove(index - BITS_PER_WORD);
         } else {
             long mask = (1L << index);
             final boolean value = (mData & mask) != 0;
@@ -90,18 +90,18 @@ class HiveBucket {
             // cannot use >> because it adds one.
             final long after = Long.rotateRight(mData & ~mask, 1);
             mData = before | after;
-            if (next != null) {
-                if (next.get(0)) {
+            if (mNext != null) {
+                if (mNext.get(0)) {
                     set(BITS_PER_WORD - 1);
                 }
-                next.remove(0);
+                mNext.remove(0);
             }
             return value;
         }
     }
 
     int countOnesBefore(int index) {
-        if (next == null) {
+        if (mNext == null) {
             if (index >= BITS_PER_WORD) {
                 return Long.bitCount(mData);
             }
@@ -110,13 +110,13 @@ class HiveBucket {
         if (index < BITS_PER_WORD) {
             return Long.bitCount(mData & ((1L << index) - 1));
         } else {
-            return next.countOnesBefore(index - BITS_PER_WORD) + Long.bitCount(mData);
+            return mNext.countOnesBefore(index - BITS_PER_WORD) + Long.bitCount(mData);
         }
     }
 
     @Override
     public String toString() {
-        return next == null ? Long.toBinaryString(mData)
-                : next.toString() + "xx" + Long.toBinaryString(mData);
+        return mNext == null ? Long.toBinaryString(mData)
+                : mNext.toString() + "xx" + Long.toBinaryString(mData);
     }
 }
