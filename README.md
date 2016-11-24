@@ -35,7 +35,7 @@
 ### 2.1 加入依赖
 
 ```
-compile 'com.github.chacojack:hivelayoutmanager:1.0.0'
+compile 'com.github.chacojack:hivelayoutmanager:1.0.1'
 ```
 
 ### 2.2 使用HiveLayoutManager
