@@ -77,6 +77,7 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager {
     private int mOrientation;
     private int mGravity = CENTER;
     private boolean firstLayout = true;
+    private RectF mPadding = new RectF();
 
     /**
      * @param orientation the LayoutManager orientation.
@@ -115,6 +116,20 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager {
     public void setGravity(final int gravity) {
         this.mGravity = gravity;
     }
+
+    /**
+     * set the layout manager padding.if you need recyclerView have a padding,you can use this to
+     * solve the problem that item cannot disappear from the edge of view.
+     *
+     * @param paddingLeft
+     * @param paddingTop
+     * @param paddingRight
+     * @param paddingBottom
+     */
+    public void setPadding(float paddingLeft, float paddingTop, float paddingRight, float paddingBottom) {
+        mPadding.set(paddingLeft, paddingTop, paddingRight, paddingBottom);
+    }
+
 
     @Override
     public RecyclerView.LayoutParams generateDefaultLayoutParams() {
@@ -163,14 +178,14 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager {
             firstLayout = false;
             if ((mGravity & CENTER) == 0) { // 不是Center的时候
                 if ((mGravity & ALIGN_LEFT) != 0) { // 如果是从左对其
-                    doScrollHorizontalBx(recycler, state, mLayoutState.outLineRect.left);
+                    doScrollHorizontalBx(recycler, state, mLayoutState.outLineRect.left - mPadding.left);
                 } else if ((mGravity & ALIGN_RIGHT) != 0) {
-                    doScrollHorizontalBx(recycler, state, mLayoutState.outLineRect.right - getWidth());
+                    doScrollHorizontalBx(recycler, state, mLayoutState.outLineRect.right - getWidth() + mPadding.right);
                 }
                 if ((mGravity & ALIGN_TOP) != 0) {
-                    doScrollVerticalBy(recycler, state, mLayoutState.outLineRect.top);
+                    doScrollVerticalBy(recycler, state, mLayoutState.outLineRect.top - mPadding.top);
                 } else if ((mGravity & ALIGN_BOTTOM) != 0) {
-                    doScrollVerticalBy(recycler, state, mLayoutState.outLineRect.bottom - getHeight());
+                    doScrollVerticalBy(recycler, state, mLayoutState.outLineRect.bottom - getHeight() + mPadding.bottom);
                 }
             } else {
                 fill(recycler, state);
@@ -294,8 +309,8 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager {
 
     @Override
     public int scrollHorizontallyBy(int dx, RecyclerView.Recycler recycler, RecyclerView.State state) {
-        if ((mLayoutState.edgeDistance.left < 0 && dx < 0) || (mLayoutState.edgeDistance.right < 0 && dx > 0)) {
-            float distance = dx < 0 ? Math.max(mLayoutState.edgeDistance.left, dx) : Math.min(-mLayoutState.edgeDistance.right, dx);
+        if ((mLayoutState.edgeDistance.left < mPadding.left && dx < 0) || (mLayoutState.edgeDistance.right < mPadding.right && dx > 0)) {
+            float distance = dx < 0 ? Math.max(mLayoutState.edgeDistance.left - mPadding.left, dx) : Math.min(-(mLayoutState.edgeDistance.right - mPadding.right), dx);
             doScrollHorizontalBx(recycler, state, distance);
             return (int) distance;
         } else if (mLayoutState.offsetX != 0) {
@@ -341,8 +356,8 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager {
 
     @Override
     public int scrollVerticallyBy(int dy, RecyclerView.Recycler recycler, RecyclerView.State state) {
-        if ((mLayoutState.edgeDistance.top < 0 && dy < 0) || (mLayoutState.edgeDistance.bottom < 0 && dy > 0)) {
-            float distance = dy < 0 ? Math.max(mLayoutState.edgeDistance.top, dy) : Math.min(-mLayoutState.edgeDistance.bottom, dy);
+        if ((mLayoutState.edgeDistance.top < mPadding.top && dy < 0) || (mLayoutState.edgeDistance.bottom < mPadding.bottom && dy > 0)) {
+            float distance = dy < 0 ? Math.max(mLayoutState.edgeDistance.top - mPadding.top, dy) : Math.min(-(mLayoutState.edgeDistance.bottom - mPadding.bottom), dy);
             doScrollVerticalBy(recycler, state, distance);
             return (int) distance;
         } else if (mLayoutState.offsetY != 0) {
@@ -379,6 +394,11 @@ public class HiveLayoutManager extends RecyclerView.LayoutManager {
     @Override
     public boolean canScrollVertically() {
         return true;
+    }
+
+
+    public RectF getPadding() {
+        return mPadding;
     }
 
     /**

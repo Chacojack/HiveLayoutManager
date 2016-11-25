@@ -100,14 +100,15 @@ public class MainActivity extends AppCompatActivity {
             adapter.addData(resIds[i % resIds.length]);
         }
 //        layoutManager.setGravity(HiveLayoutManager.CENTER);
-//        layoutManager.setGravity(HiveLayoutManager.ALIGN_LEFT);
+        layoutManager.setGravity(HiveLayoutManager.ALIGN_LEFT);
 //        layoutManager.setGravity(HiveLayoutManager.ALIGN_RIGHT);
 //        layoutManager.setGravity(HiveLayoutManager.ALIGN_TOP);
 //        layoutManager.setGravity(HiveLayoutManager.ALIGN_BOTTOM);
 //        layoutManager.setGravity(HiveLayoutManager.ALIGN_LEFT | HiveLayoutManager.ALIGN_TOP);
 //        layoutManager.setGravity(HiveLayoutManager.ALIGN_LEFT | HiveLayoutManager.ALIGN_BOTTOM);
 //        layoutManager.setGravity(HiveLayoutManager.ALIGN_RIGHT | HiveLayoutManager.ALIGN_TOP);
-        layoutManager.setGravity(HiveLayoutManager.ALIGN_RIGHT | HiveLayoutManager.ALIGN_BOTTOM);
+//        layoutManager.setGravity(HiveLayoutManager.ALIGN_RIGHT | HiveLayoutManager.ALIGN_BOTTOM);
+        layoutManager.setPadding(300, 400, 500, 600);
 
     }
 
